@@ -1,6 +1,7 @@
 package cn.wan.moodRep.pageProcessor;
 
 import cn.wan.moodRep.utils.Constant;
+import cn.wan.moodRep.utils.NiceUtil;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
@@ -12,8 +13,9 @@ import java.util.List;
  */
 public class MoodPageProcessor implements PageProcessor {
 
-    public int pageTotal;
-    public String g_tk;
+    private int pageTotal;
+//    private String g_tk;
+    private String targetURL;
 
     private Site site =
             Site.me()
@@ -25,7 +27,8 @@ public class MoodPageProcessor implements PageProcessor {
 
     public MoodPageProcessor() {
         this.pageTotal = Constant.getInt("pageTotal");
-        this.g_tk = Constant.getConfig("g_tk");
+//        this.g_tk = Constant.getConfig("g_tk");
+        this.targetURL = Constant.getConfig("startUrl");
     }
 
     public void process(Page page) {
@@ -45,11 +48,13 @@ public class MoodPageProcessor implements PageProcessor {
         page.putField("results",results);
         //        如果当前页面值小于总page数，那么继续向URL队列中放置TargetURL
         if ((posNowInt/20)+1 < pageTotal){
-            String targetURL =
-                    "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=2933274812&ftype=0&sort=0&pos="
-                            + (posNowInt+20) +
-                            "&num=20&replynum=100&callback=_preloadCallback&code_version=1&format=jsonp&need_private_comment=1&qzonetoken=e20a6634252be55ea8b0e48c273a8b3b5fd0e4409bc82d56f7cf5b2079430eeee837331fbc0479f38a3a&g_tk="
-                            +g_tk;
+
+//            String targetURL =
+//                    "https://user.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=2933274812&ftype=0&sort=0&pos="
+//                            + (posNowInt+20) +
+//                            "&num=20&replynum=100&callback=_preloadCallback&code_version=1&format=jsonp&need_private_comment=1&qzonetoken=e20a6634252be55ea8b0e48c273a8b3b5fd0e4409bc82d56f7cf5b2079430eeee837331fbc0479f38a3a&g_tk="
+//                            +g_tk;
+            NiceUtil.alterGETParameterValue(targetURL,"pos",String.valueOf(posNowInt+20));
             page.addTargetRequest(targetURL);
         }
         System.out.println("--------------------------------------------------------------------------------------------------------");

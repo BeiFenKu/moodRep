@@ -29,10 +29,9 @@ public class Main {
         String finalfile = Constant.getConfig("finalfile");
         dealAndWrite1(memoryPipeline.memoryPlace,noemojifile);
 
-        Scanner in = new Scanner(System.in);
-        System.out.println("处理完了没？？");
-        in.next();
 
+        System.out.println("处理完了没？？");
+        System.in.read();
 
         segWithoutStop(noemojifile,finalfile);
 
