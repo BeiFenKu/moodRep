@@ -2,6 +2,7 @@ package cn.wan.moodRep;
 
 import cn.wan.moodRep.pageProcessor.MoodPageProcessor;
 import cn.wan.moodRep.pipeLine.MemoryPipeline;
+import cn.wan.moodRep.utils.Constant;
 import org.apdplat.word.WordSegmenter;
 import org.apdplat.word.segmentation.Word;
 import us.codecraft.webmagic.Spider;
@@ -17,22 +18,23 @@ public class Main {
     public static void main(String[] args) throws Exception {
         MemoryPipeline memoryPipeline = new MemoryPipeline();
 
-        String url=
-                "https://h5.qzone.qq.com/proxy/domain/taotao.qq.com/cgi-bin/emotion_cgi_msglist_v6?uin=905852399&inCharset=utf-8&outCharset=utf-8&hostUin=905852399&notice=0&sort=0&pos=0&num=20&cgi_host=http%3A%2F%2Ftaotao.qq.com%2Fcgi-bin%2Femotion_cgi_msglist_v6&code_version=1&format=jsonp&need_private_comment=1&g_tk=842368538";
-        Spider.create(new MoodPageProcessor(51,"842368538"))
+        String url= Constant.getConfig("startUrl");
+        Spider.create(new MoodPageProcessor())
                 .addPipeline(memoryPipeline)
                 .addUrl(url)
-                .thread(1)
+                .thread(Constant.getInt("thread"))
                 .run();
         System.out.println("memoryPlace\t:"+memoryPipeline.memoryPlace);
-        dealAndWrite1(memoryPipeline.memoryPlace,"test_zhangtianjing_noemoji.txt");
+        String noemojifile = Constant.getConfig("noemojifile");
+        String finalfile = Constant.getConfig("finalfile");
+        dealAndWrite1(memoryPipeline.memoryPlace,noemojifile);
 
         Scanner in = new Scanner(System.in);
         System.out.println("处理完了没？？");
         in.next();
 
 
-        segWithoutStop("test_zhangtianjing_noemoji.txt","test_zhangtianjing_finall.txt");
+        segWithoutStop(noemojifile,finalfile);
 
     }
 
